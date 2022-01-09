@@ -2,15 +2,13 @@ package edu.iastate.cs228.hw2;
 
 /**
  *  
- * @author
+ * @author Abe Scheideman
+ * 
  *
  */
 
 import java.util.Comparator;
-import java.awt.Point;
-import java.io.FileNotFoundException;
 import java.lang.IllegalArgumentException; 
-import java.util.InputMismatchException;
 
 /**
  * 
@@ -31,7 +29,8 @@ public abstract class AbstractSorter
 	
 	
 	// Add other protected or private instance variables you may need. 
-	
+	protected Point[] leftPoints;
+	protected Point[] rightPoints;
 
 	protected AbstractSorter()
 	{
@@ -48,7 +47,6 @@ public abstract class AbstractSorter
 	 */
 	protected AbstractSorter(Point[] pts) throws IllegalArgumentException
 	{
-		// TODO
 		if (pts == null || pts.length == 0) throw new IllegalArgumentException("Point[] pts must hold at least one Point.");
 		
 		points = new Point[pts.length];
@@ -77,31 +75,15 @@ public abstract class AbstractSorter
 	 */
 	public void setComparator(int order) throws IllegalArgumentException
 	{
-		// TODO 
-		if (order < 0 || order > 1) throw new IllegalArgumentException("order must be 0 or 1 to set the correct comparator.");
+		if (order < 0 || order > 1) throw new IllegalArgumentException("Order must be 0 or 1 to set the correct comparator.");
 		
-		pointComparator = new XComparator();
-		
-		private class XComparator extends Point {
-			Point pointObj = new Point();
-			
-			private static int compare(Point lhs, Point rhs) {
-				pointObj.setXorY(true);
-				return lhs.compareTo(rhs);
-			}
+		if (order == 0) {
+			pointComparator = new XComparator();
 		}
-		
-		private class YComparator extends Point {
-			private static int compare(Point lhs, Point rhs) {
-				return lhs.compareTo(rhs);
-			}
+		else {
+			pointComparator = new YComparator();
 		}
-		
-		
-		setXorY(true);
-	}
-
-	
+	}	
 
 	/**
 	 * Use the created pointComparator to conduct sorting.  
@@ -118,7 +100,7 @@ public abstract class AbstractSorter
 	 */
 	public Point getMedian()
 	{
-		return points[points.length/2]; 
+		return points[points.length / 2]; 
 	}
 	
 	
@@ -129,7 +111,9 @@ public abstract class AbstractSorter
 	 */
 	public void getPoints(Point[] pts)
 	{
-		// TODO 
+		for (int i = 0; i < pts.length; i++) {
+			pts[i] = points[i];
+		}
 	}
 	
 
@@ -141,6 +125,8 @@ public abstract class AbstractSorter
 	 */
 	protected void swap(int i, int j)
 	{
-		// TODO 
+		Point temp = points[i];
+		points[i] = points[j];
+		points[j] = temp;
 	}	
 }

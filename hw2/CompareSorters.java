@@ -1,8 +1,9 @@
 package edu.iastate.cs228.hw2;
 
+
 /**
  *  
- * @author
+ * @author Abe Scheideman
  *
  */
 
@@ -15,7 +16,7 @@ package edu.iastate.cs228.hw2;
  */
 
 import java.io.FileNotFoundException;
-import java.util.Scanner; 
+import java.util.Scanner;
 import java.util.Random; 
 
 
@@ -30,7 +31,6 @@ public class CompareSorters
 	 **/
 	public static void main(String[] args) throws FileNotFoundException
 	{		
-		// TODO 
 		// 
 		// Conducts multiple rounds of comparison of four sorting algorithms.  Within each round, 
 		// set up scanning as follows: 
@@ -42,8 +42,7 @@ public class CompareSorters
 		//       PointScanner objects, which are created using four different values  
 		//       of the Algorithm type:  SelectionSort, InsertionSort, MergeSort and QuickSort. 
 		// 
-		// 	
-		PointScanner[] scanners = new PointScanner[4]; 
+		// 			
 		
 		// For each input of points, do the following. 
 		// 
@@ -57,13 +56,73 @@ public class CompareSorters
 		//
 		// A sample scenario is given in Section 2 of the project description. 
 		
+		PointScanner[] scanners = new PointScanner[4]; 
+		Scanner userInput = new Scanner(System.in);
+		int key;
+		int trial = 1;
+		int numPoints;
+		String fileName;
+		
+		System.out.println("keys:  1 (random integers)  2 (file input)  3 (exit)");
+		System.out.print("Trial " + trial + ": ");
+		key = userInput.nextInt();
+		
+		// Initialize each PointScanner object either from an array of random points or from a file with the coordinates.
+		do {
+			if (key == 1) {
+				System.out.print("Enter number of random points: ");
+				numPoints = userInput.nextInt();
+				Random generator = new Random();
+				
+				scanners[0] = new PointScanner(generateRandomPoints(numPoints, generator), Algorithm.SelectionSort);
+				scanners[1] = new PointScanner(generateRandomPoints(numPoints, generator), Algorithm.InsertionSort);
+				scanners[2] = new PointScanner(generateRandomPoints(numPoints, generator), Algorithm.MergeSort);
+				scanners[3] = new PointScanner(generateRandomPoints(numPoints, generator), Algorithm.QuickSort);
+			}
+			else if (key == 2) {
+				System.out.println("Points from a file");
+				System.out.print("File name: ");
+				fileName = userInput.next();
+
+				scanners[0] = new PointScanner(fileName, Algorithm.SelectionSort);
+				scanners[1] = new PointScanner(fileName, Algorithm.InsertionSort);
+				scanners[2] = new PointScanner(fileName, Algorithm.MergeSort);
+				scanners[3] = new PointScanner(fileName, Algorithm.QuickSort);
+			}
+			
+			// Output the performance table and get the next user input.
+			printPerformanceTable(scanners);
+			trial++;
+			System.out.print("Trial " + trial + ": ");
+			key = userInput.nextInt();
+		} while (key != 3);
+		
+		userInput.close();
 	}
-	
-	
+
+	/**
+	 * This method formats the console output correctly. 
+	 * It calls each PointScanner objects respective scan() and stats() method.
+	 * @param pScanners
+	 */
+	private static void printPerformanceTable(PointScanner[] pScanners) 
+	{
+		System.out.println("\nalgorithm         size  time (ns)");
+		System.out.println("- - - - - - - - - - - - - - - - -");
+
+		for (PointScanner ps : pScanners) {
+			ps.scan();
+			System.out.println(ps.stats());
+		}
+
+		System.out.println("- - - - - - - - - - - - - - - - -\n");
+	}
+
+
 	/**
 	 * This method generates a given number of random points.
 	 * The coordinates of these points are pseudo-random numbers within the range 
-	 * [-50,50] × [-50,50]. Please refer to Section 3 on how such points can be generated.
+	 * [-50,50] ï¿½ [-50,50]. Please refer to Section 3 on how such points can be generated.
 	 * 
 	 * Ought to be private. Made public for testing. 
 	 * 
@@ -73,8 +132,14 @@ public class CompareSorters
 	 */
 	public static Point[] generateRandomPoints(int numPts, Random rand) throws IllegalArgumentException
 	{ 
-		return null; 
-		// TODO 
+		Point[] pts = new Point[numPts];
+		
+		// Create the new point object and put it in the array pts.
+		for (int i = 0; i < numPts; i++) {
+			pts[i] = new Point(rand.nextInt(101) - 50, rand.nextInt(101) - 50);
+		}
+		
+		return pts; 
 	}
-	
+
 }
